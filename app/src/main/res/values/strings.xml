@@ -11,8 +11,4 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="password">password</string>
-    <string name="email">email</string>
-    <string name="signinBtn">로그인</string>
-    <string name="signupEditText">회원가입</string>
 </resources>

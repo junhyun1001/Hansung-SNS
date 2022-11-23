@@ -19,19 +19,17 @@ class SigninFragment : BaseFragment<FragmentSigninBinding>(R.layout.fragment_sig
         super.initDataBinding()
 
         // 여기다가 binding
+        binding.signinButton.setOnClickListener {
+            val mainAct = activity as MainActivity
+            navController.navigate(R.id.action_signinFragment_to_peedFragment) // 프래그먼트 바꾸는 방법
+            mainAct.showBottomNav()
+        }
     }
-
 
     override fun initAfterBinding() {
         super.initAfterBinding()
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        val mainAct = activity as MainActivity
-        mainAct.showBottomNav()
-    }
 
 }

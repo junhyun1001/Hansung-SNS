@@ -9,7 +9,11 @@
         android:id="@+id/signinFragment"
         android:name="com.example.instagram.SigninFragment"
         android:label="signinFragment"
-        tools:layout="@layout/fragment_signin" />
+        tools:layout="@layout/fragment_signin" >
+        <action
+            android:id="@+id/action_signinFragment_to_peedFragment"
+            app:destination="@id/peedFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/peedFragment"
