@@ -17,6 +17,7 @@ import com.example.instagram.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
     var firestore: FirebaseFirestore? = null
@@ -55,10 +56,11 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             auth = FirebaseAuth.getInstance()
 
 
-            firestore?.collection("images")?.orderBy("timestamp")
+            firestore?.collection("images")?.orderBy("timestamp", Query.Direction.DESCENDING)
                 ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
                     contentUidList.clear()
+                    if(querySnapshot ==null) return@addSnapshotListener
                     for (snapshot in querySnapshot!!.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentDTOs.add(item!!)
