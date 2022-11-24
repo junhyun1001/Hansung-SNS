@@ -21,6 +21,7 @@
         android:label="feedFragment"
         tools:layout="@layout/fragment_peed" />
 
+
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.instagram.SearchFragment"
@@ -31,13 +32,21 @@
         android:id="@+id/uploadFragment"
         android:name="com.example.instagram.UploadFragment"
         android:label="uploadFragment"
-        tools:layout="@layout/fragment_upload" />
+        tools:layout="@layout/fragment_upload" >
+        <action
+            android:id="@+id/action_uploadFragment_self"
+            app:destination="@id/uploadFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/myProfileFragment"
         android:name="com.example.instagram.MyProfileFragment"
         android:label="myProfileFragment"
-        tools:layout="@layout/fragment_my_profile" />
+        tools:layout="@layout/fragment_my_profile" >
+        <action
+            android:id="@+id/action_myProfileFragment_to_signinFragment"
+            app:destination="@id/signinFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/yourProfileFragment"
