@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.instagram.databinding.FragmentAlarmBinding
-import com.example.instagram.databinding.FragmentMyProfileBinding
+import com.example.instagram.databinding.FragmentCommentBinding
+import com.example.instagram.databinding.FragmentUploadBinding
 
-class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragment_my_profile) {
+class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_comment) {
 
     override fun initStartView() {
         super.initStartView()
