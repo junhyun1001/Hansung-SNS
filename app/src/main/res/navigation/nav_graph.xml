@@ -13,13 +13,26 @@
         <action
             android:id="@+id/action_signinFragment_to_peedFragment"
             app:destination="@id/peedFragment" />
+        <action
+            android:id="@+id/action_signinFragment_to_siginupFragment"
+            app:destination="@id/siginupFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/peedFragment"
         android:name="com.example.instagram.PeedFragment"
         android:label="feedFragment"
-        tools:layout="@layout/fragment_peed" />
+        tools:layout="@layout/fragment_peed" >
+        <action
+            android:id="@+id/action_peedFragment_to_commentFragment"
+            app:destination="@id/commentFragment" />
+        <action
+            android:id="@+id/action_peedFragment_to_yourProfileFragment"
+            app:destination="@id/yourProfileFragment" />
+        <action
+            android:id="@+id/action_peedFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+    </fragment>
 
 
     <fragment
@@ -64,6 +77,16 @@
         android:id="@+id/siginupFragment"
         android:name="com.example.instagram.SingupFragment"
         android:label="siginupFragment"
-        tools:layout="@layout/fragment_singup" />
+        tools:layout="@layout/fragment_singup" >
+        <action
+            android:id="@+id/action_siginupFragment_to_signinFragment"
+            app:destination="@id/signinFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="com.example.instagram.CommentFragment"
+        android:label="commentFragment"
+        tools:layout="@layout/fragment_comment" />
 
 </navigation>
