@@ -39,7 +39,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
 //        binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
 
         binding.accountSignout.setOnClickListener {
-            findNavController().navigate(R.id.action_myProfileFragment_to_signinFragment)
+            navController.navigate(R.id.action_myProfileFragment_to_signinFragment)
             auth?.signOut()
         }
         getProfileImage()

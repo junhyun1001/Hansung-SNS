@@ -1,8 +1,11 @@
 package com.example.instagram
 
+import android.content.Intent
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.instagram.databinding.FragmentSigninBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class SigninFragment : BaseFragment<FragmentSigninBinding>(R.layout.fragment_signin) {
     var auth: FirebaseAuth? = null
@@ -10,6 +13,10 @@ class SigninFragment : BaseFragment<FragmentSigninBinding>(R.layout.fragment_sig
         super.initStartView()
         auth = FirebaseAuth.getInstance()
 
+    }
+    override fun onStart() {
+        super.onStart()
+        moveMainPage(auth?.currentUser)
     }
 
     override fun initDataBinding() {
@@ -52,6 +59,12 @@ class SigninFragment : BaseFragment<FragmentSigninBinding>(R.layout.fragment_sig
     override fun initAfterBinding() {
         super.initAfterBinding()
 
+    }
+    fun moveMainPage(user: FirebaseUser?) {
+        if (user != null) {
+            navController.navigate(R.id.action_signinFragment_to_peedFragment)
+//            activity?.finish()
+        }
     }
 
 
