@@ -1,4 +1,4 @@
-package com.example.hanstargram.navigation.model
+package com.example.instargram.navigation.model
 
 data class FollowDTO (
     var followerCount : Int = 0,

@@ -1,5 +1,5 @@
-package com.example.hanstargram.navigation.model
-//package com.example.instagram.model
+//package com.example.hanstargram.navigation.model
+package com.example.instagram.model
 
 class ContentDTO(
     var explain: String? = null,

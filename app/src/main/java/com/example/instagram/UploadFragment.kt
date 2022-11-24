@@ -12,7 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.instagram.databinding.FragmentUploadBinding
-import com.example.hanstargram.navigation.model.ContentDTO
+import com.example.instagram.model.ContentDTO
+//import com.example.hanstargram.navigation.model.ContentDTO
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

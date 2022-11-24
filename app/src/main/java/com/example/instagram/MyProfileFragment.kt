@@ -11,7 +11,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.hanstargram.navigation.model.ContentDTO
+//import com.example.instargram.navigation.model.ContentDTO
 import com.example.instagram.databinding.FragmentAlarmBinding
 import com.example.instagram.databinding.FragmentMyProfileBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.instagram.model.ContentDTO
 
 class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragment_my_profile) {
     var firestore: FirebaseFirestore? = null
