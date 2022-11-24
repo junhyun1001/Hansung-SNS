@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        binding!!.bottomNavigation.visibility = View.GONE
+        hideNav()
         setBottomNav()
     }
 
@@ -40,6 +40,10 @@ class MainActivity : AppCompatActivity() {
 
     fun showNav() {
         binding!!.bottomNavigation.visibility = View.VISIBLE
+    }
+
+    fun hideNav() {
+        binding!!.bottomNavigation.visibility = View.GONE
     }
 
     override fun onStart() {
