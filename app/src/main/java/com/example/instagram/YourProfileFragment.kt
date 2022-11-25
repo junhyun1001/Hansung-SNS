@@ -8,10 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.instagram.databinding.FragmentYourProfileBinding
 import com.example.instagram.model.ContentDTO
-import com.example.instargram.navigation.model.FollowDTO
+import com.example.instagram.model.FollowDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.properties.Delegates
 
 class YourProfileFragment :
     BaseFragment<FragmentYourProfileBinding>(R.layout.fragment_your_profile) {
@@ -19,6 +18,7 @@ class YourProfileFragment :
     var auth: FirebaseAuth? = null
     var uid: String? = null
     var currentUserUid: String? = null
+
 
     override fun initStartView() {
         super.initStartView()
@@ -28,25 +28,52 @@ class YourProfileFragment :
         currentUserUid = auth?.currentUser?.uid
 
 
-        var flag = true
+//        var flag = true
+//        binding.accountBtnFollow.setOnClickListener {
+//            if (flag) {
+//                binding.accountBtnFollow.text = "Unfollow"
+////                myRequestFollow()
+//                flag = false
+//            } else if (!flag) {
+//                binding.accountBtnFollow.text = "Follow"
+////                yourRequestFollow()
+//                flag = true
+//            }
+//        }
+
         binding.accountBtnFollow.setOnClickListener {
-            if (flag) {
-                binding.accountBtnFollow.text = "Unfollow"
-//                myRequestFollow()
-                flag = false
-            } else if (!flag) {
-                binding.accountBtnFollow.text = "Follow"
-//                yourRequestFollow()
-                flag = true
-            }
+//            requestFollow()
+            followTest()
         }
 
         binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
         binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
     }
 
-    // 내가 팔로우를 걸었을 때
-    fun myRequestFollow() {
+    fun followTest() {
+//        var followDTO = FollowDTO()
+//        // 내가 팔로우 한 상태일 때(언팔로우 버튼이 떠 있어야 함)
+//        if (followDTO.followings.containsKey(uid)) {
+//            binding.accountBtnFollow.text = "팔로우하기"
+//            followDTO.followingCount = followDTO.followingCount - 1
+//            followDTO.followings.remove(uid)
+//
+//        } else { // 내가 팔로우 하지 않은 상태(팔로우 버튼이 떠 있어야 함)
+//            binding.accountBtnFollow.text = "언팔로우하기"
+//            followDTO.followingCount = followDTO.followingCount + 1
+//            followDTO.followings[uid!!] = true
+////                followerAlarm(uid!!)
+//        }
+
+        var x = firestore!!.collection("users").document().collection("followerCount")
+        println(x)
+
+    }
+
+    // 내 계정의 데이터 저장
+    // 상대방 계정의 데이터 저장
+    fun requestFollow() {
+        // 내 계정에 데이터 저장
         var tsDocFollowing = firestore!!.collection("users").document(currentUserUid!!)
         firestore?.runTransaction { transaction ->
 
@@ -59,56 +86,58 @@ class YourProfileFragment :
 
                 transaction.set(tsDocFollowing, followDTO)
                 return@runTransaction
-
             }
-            // Unstar the post and remove self from stars
+
+            // 내가 팔로우 한 상태일 때(언팔로우 버튼이 떠 있어야 함)
             if (followDTO.followings.containsKey(uid)) {
-
-                followDTO.followerCount = followDTO.followerCount - 1
+                binding.accountBtnFollow.text = "언팔로우하기"
+                followDTO.followingCount = followDTO.followingCount - 1
                 followDTO.followings.remove(uid)
-            } else {
 
-                followDTO.followerCount = followDTO.followerCount + 1
+            } else { // 내가 팔로우 하지 않은 상태(팔로우 버튼이 떠 있어야 함)
+                binding.accountBtnFollow.text = "팔로우하기"
+                followDTO.followingCount = followDTO.followingCount + 1
                 followDTO.followings[uid!!] = true
 //                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollowing, followDTO)
             return@runTransaction
         }
-    }
 
-    // 상대방이 나를 팔로우 했을 때
-    fun yourRequestFollow() {
+        // 상대방 계정에 데이터 저장
         var tsDocFollower = firestore!!.collection("users").document(uid!!)
+        println("##################################$uid")
         firestore?.runTransaction { transaction ->
 
             var followDTO = transaction.get(tsDocFollower).toObject(FollowDTO::class.java)
             if (followDTO == null) {
 
                 followDTO = FollowDTO()
-                followDTO.followerCount = 1
-                followDTO.followers[currentUserUid!!] = true
+                followDTO!!.followerCount = 1
+                followDTO!!.followers[currentUserUid!!] = true
 
-
-                transaction.set(tsDocFollower, followDTO)
+                transaction.set(tsDocFollower, followDTO!!)
                 return@runTransaction
             }
 
-            if (followDTO.followers.containsKey(currentUserUid!!)) {
+            // 내가 상대방 계정에 팔로우를 했을 경우
+            if (followDTO?.followers?.containsKey(currentUserUid!!)!!) {
+                binding.accountBtnFollow.text = "언팔로우하기"
+                followDTO!!.followerCount = followDTO!!.followerCount - 1
+                followDTO!!.followers.remove(currentUserUid!!)
 
+            } else { // 상대방 계정을 팔로우 하지 않았을 경우
+                binding.accountBtnFollow.text = "팔로우하기"
 
-                followDTO.followerCount = followDTO.followerCount - 1
-                followDTO.followers.remove(currentUserUid!!)
-            } else {
-
-                followDTO.followerCount = followDTO.followerCount + 1
-                followDTO.followers[currentUserUid!!] = true
+                followDTO!!.followerCount = followDTO!!.followerCount + 1
+                followDTO!!.followers[currentUserUid!!] = true
 
             }// Star the post and add self to stars
 
-            transaction.set(tsDocFollower, followDTO)
+            transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
         }
+
     }
 
 
@@ -162,10 +191,15 @@ class YourProfileFragment :
 
     override fun initDataBinding() {
         super.initDataBinding()
+
+
+
     }
 
     override fun initAfterBinding() {
         super.initAfterBinding()
+
+
     }
 
 }

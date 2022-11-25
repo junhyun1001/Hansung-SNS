@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,9 +38,12 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
         binding.detailviewfragmentRecyclerview.adapter = PeedAdapter()
         binding.detailviewfragmentRecyclerview.layoutManager =
             LinearLayoutManager(context) // 스크롤을 위아래로 할지, 좌우로 할지를 결정하는 것
+
+
+
     }
 
-    inner class PeedAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class PeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var firestore: FirebaseFirestore? = null
         var auth: FirebaseAuth? = null
         var uid: String? = null
@@ -60,7 +65,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                 ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
                     contentUidList.clear()
-                    if(querySnapshot ==null) return@addSnapshotListener
+                    if (querySnapshot == null) return@addSnapshotListener
                     for (snapshot in querySnapshot!!.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentDTOs.add(item!!)
@@ -97,24 +102,17 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                     }
                 }
 
-            println("#####################$uid,,,,,$user########################")
-                // 해당 게시물을 올린 유저 프로필로 이동
-                viewHolder.findViewById<ImageView>(R.id.detailviewitem_profile_image)
-                    .setOnClickListener {
+            // 해당 게시물을 올린 유저 프로필로 이동
+            viewHolder.findViewById<ImageView>(R.id.detailviewitem_profile_image)
+                .setOnClickListener {
+                    val clickUser = contentDTOs[position].uid
+                    // 해당 게시물을 올린 유저가 자기 계정일 때
+                    if (uid != null && clickUser == uid) {
+                        findNavController().navigate(R.id.action_peedFragment_to_myProfileFragment)
+                    } else {
                         findNavController().navigate(R.id.action_peedFragment_to_yourProfileFragment)
-                        val clickUser = contentDTOs[position].uid
-                        if (clickUser != null) {
-                            Log.d("clickUser : ",clickUser)
-                        }
-//                    val fragment = YourProfileFragment()
-//                    val bundle = Bundle()
-//                    bundle.putString("destinationUid", contentDTOs[position].uid)
-//                    bundle.putString("userId", contentDTOs[position].userId)
-//                    fragment.arguments = bundle
-//                    activity!!.supportFragmentManager.beginTransaction()
-//                        .replace(R.id.yourProfileFragment, fragment)
-//                        .commit()
                     }
+                }
 
             // 유저 아이디
             viewHolder.findViewById<TextView>(R.id.detailviewitem_profile_textview).text =
@@ -150,6 +148,13 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             // 댓글 눌렀을 때
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_comment_imageview)
                 .setOnClickListener {
+                    setFragmentResult("destinationUid", bundleOf("uidList" to contentUidList[position]))
+                    setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
+                    Log.d("id",contentDTOs[position].uid.toString())
+
+                    val result = "result"
+                    setFragmentResult("requestKey", bundleOf("bundleKey" to result))
+
                     findNavController().navigate(R.id.action_peedFragment_to_commentFragment)
                 }
         }
