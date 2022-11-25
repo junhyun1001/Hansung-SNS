@@ -1,9 +1,5 @@
 package com.example.instagram
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -11,9 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.instagram.databinding.FragmentPeedBinding
 import com.example.instagram.databinding.FragmentSearchBinding
-import com.example.instagram.databinding.FragmentSigninBinding
 import com.example.instagram.model.ContentDTO
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -29,7 +23,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
         super.initDataBinding()
 
         binding.gridfragmentRecyclerview.adapter = GridFragmentRecyclerViewAdapter()
-
+        binding.gridfragmentRecyclerview.layoutManager = GridLayoutManager(context, 3)
 
     }
 
