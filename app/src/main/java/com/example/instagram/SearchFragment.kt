@@ -68,7 +68,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                 .apply(RequestOptions().centerCrop())
                 .into(imageView)
 
+            // 이미지 클릭하면 해당 유저의 프로필이 보임
             imageView.setOnClickListener {
+                println("유저 페이지 들어가기")
 //                val fragment = UserFragment()
 //                val bundle = Bundle()
 //
