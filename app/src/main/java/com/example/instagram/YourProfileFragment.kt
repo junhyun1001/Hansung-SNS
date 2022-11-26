@@ -75,15 +75,15 @@ class YourProfileFragment :
                     }
                     if (followDTO?.followerCount != null) {
                         binding.accountTvFollowCount.text = followDTO.followerCount.toString()
-                        if (followDTO.followers.containsKey(currentUserUid!!) == true) {
-                            // 여기서 버튼 텍스트 바꾸면 앱 죽음
-//                            binding.accountBtnFollow.text = getString(R.string.follow_cancel)
-                        } else {
-                            if (uid != currentUserUid) {
-                                // 여기서 버튼 텍스트 바꾸면 앱 죽음
-//                                binding.accountBtnFollow.text = getString(R.string.follow)
-                            }
-                        }
+//                        if (followDTO.followers.containsKey(currentUserUid!!) == true) {
+//                            // 여기서 버튼 텍스트 바꾸면 앱 죽음
+////                            binding.accountBtnFollow.text = getString(R.string.follow_cancel)
+//                        } else {
+//                            if (uid != currentUserUid) {
+//                                // 여기서 버튼 텍스트 바꾸면 앱 죽음
+////                                binding.accountBtnFollow.text = getString(R.string.follow)
+//                            }
+//                        }
                     }
                 }
         }
