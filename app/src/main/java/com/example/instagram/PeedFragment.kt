@@ -106,8 +106,12 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                     val clickUser = contentDTOs[position].uid
                     // 해당 게시물을 올린 유저가 자기 계정일 때
                     if (uid != null && clickUser == uid) {
+                        setFragmentResult("destinationUid", bundleOf("uidList" to contentUidList[position]))
+                        setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
                         findNavController().navigate(R.id.action_peedFragment_to_myProfileFragment)
                     } else {
+                        setFragmentResult("destinationUid", bundleOf("uidList" to contentUidList[position]))
+                        setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
                         findNavController().navigate(R.id.action_peedFragment_to_yourProfileFragment)
                     }
                 }

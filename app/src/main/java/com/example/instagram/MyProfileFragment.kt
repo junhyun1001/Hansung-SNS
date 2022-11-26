@@ -68,13 +68,12 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
                 if (documentSnapshot.data != null) {
-                    var url = documentSnapshot?.data!!["image"]
+                    var url = documentSnapshot.data!!["image"]
                     Glide.with(requireActivity())
                         .load(url)
                         .apply(RequestOptions().circleCrop())
-                        .into(binding?.accountIvProfile!!)
-
-                }
+                        .into(binding.accountIvProfile)
+                 }
             }
     }
 
@@ -84,7 +83,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
         init {
             contentDTOs = ArrayList()
             imagesSnapshot = FirebaseFirestore
-                .getInstance().collection("images").whereEqualTo("uid",currentUserUID)
+                .getInstance().collection("images").whereEqualTo("uid", currentUserUID)
                 ?.addSnapshotListener { querySnapshot, firebaseFiresrore ->
 
                     if (querySnapshot == null) return@addSnapshotListener
