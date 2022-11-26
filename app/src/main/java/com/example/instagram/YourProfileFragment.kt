@@ -26,7 +26,6 @@ class YourProfileFragment :
     var uid: String? = null
     var currentUserUid: String? = null
 
-    var contentUid: String? = null
     var destinationUid: String? = null
 
     var followListenerRegistration: ListenerRegistration? = null
@@ -35,11 +34,18 @@ class YourProfileFragment :
 
     override fun initStartView() {
         super.initStartView()
+        (activity as MainActivity).hideNav()
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
+
+
         currentUserUid = auth?.currentUser?.uid
+    }
+
+    override fun initDataBinding() {
+        super.initDataBinding()
 
         binding.accountBtnFollow.text = getString(R.string.follow)
 
@@ -47,18 +53,46 @@ class YourProfileFragment :
             requestFollow()
         }
 
-
-        getFollowing()
-        getFollower()
-
+//        getFollowing()
+//        getFollower()
+        getFollowerAndFollowing()
         binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
         binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
 
     }
 
+    fun getFollowerAndFollowing() {
+        setFragmentResultListener("destinationUid") { _, bundle ->
+            println("##########################getFollowerAndFollowing() Your")
+            destinationUid = bundle.getString("uidList")
+            uid = destinationUid
+            firestore?.collection("users")?.document(uid!!)
+                ?.addSnapshotListener { documetSnapshot, firebaseFirestoreException ->
+                    if (documetSnapshot == null) return@addSnapshotListener
+                    var followDTO = documetSnapshot.toObject(FollowDTO::class.java)
+                    if (followDTO?.followingCount != null) {
+                        binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
+                    }
+                    if (followDTO?.followerCount != null) {
+                        binding.accountTvFollowCount.text = followDTO.followerCount.toString()
+                        if (followDTO.followers.containsKey(currentUserUid!!) == true) {
+                            // 여기서 버튼 텍스트 바꾸면 앱 죽음
+//                            binding.accountBtnFollow.text = getString(R.string.follow_cancel)
+                        } else {
+                            if (uid != currentUserUid) {
+                                // 여기서 버튼 텍스트 바꾸면 앱 죽음
+//                                binding.accountBtnFollow.text = getString(R.string.follow)
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
 
     fun getFollowing() {
         setFragmentResultListener("destinationUid") { _, bundle ->
+            println("##########################getFollowing() Your")
             destinationUid = bundle.getString("uidList")
             uid = destinationUid
             followingListenerRegistration = firestore?.collection("users")?.document(uid!!)
@@ -73,22 +107,24 @@ class YourProfileFragment :
 
     fun getFollower() {
         setFragmentResultListener("destinationUid") { _, bundle ->
+            println("##########################getFollower() Your")
             destinationUid = bundle.getString("uidList")
             uid = destinationUid
             followListenerRegistration = firestore?.collection("users")?.document(uid!!)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    val followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
+                    var followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
                     if (followDTO == null) return@addSnapshotListener
                     binding.accountTvFollowCount.text = followDTO.followerCount.toString()
-                    binding.accountBtnFollow.text = getString(R.string.follow_cancel)
-
                 }
+
         }
     }
 
     // 내 계정의 데이터 저장
     // 상대방 계정의 데이터 저장
     fun requestFollow() {
+        println("##############################requestFollow() Your")
+//        uid = destinationUid
         // 내 계정에 데이터 저장
         var tsDocFollowing = firestore!!.collection("users").document(currentUserUid!!)
         firestore?.runTransaction { transaction ->
@@ -104,14 +140,14 @@ class YourProfileFragment :
 
             // 내가 팔로우 한 상태일 때(언팔로우 버튼이 떠 있어야 함)
             if (followDTO.followings.containsKey(uid)) {
-//                    binding.accountBtnFollow.text = "언팔로우하기"
                 followDTO.followingCount = followDTO.followingCount - 1
                 followDTO.followings.remove(uid)
+                binding.accountBtnFollow.text = "팔로우"
 
             } else { // 내가 팔로우 하지 않은 상태(팔로우 버튼이 떠 있어야 함)
-                binding.accountBtnFollow.text = "팔로우하기"
                 followDTO.followingCount = followDTO.followingCount + 1
                 followDTO.followings[uid!!] = true
+                binding.accountBtnFollow.text = "언팔로우"
 //                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollowing, followDTO)
@@ -137,10 +173,13 @@ class YourProfileFragment :
             if (followDTO?.followers?.containsKey(currentUserUid!!)!!) {
                 followDTO!!.followerCount = followDTO!!.followerCount - 1
                 followDTO!!.followers.remove(currentUserUid!!)
+                binding.accountBtnFollow.text = "팔로우"
 
             } else { // 상대방 계정을 팔로우 하지 않았을 경우
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
+                binding.accountBtnFollow.text = "언팔로우"
+
 
             }// Star the post and add self to stars
 
@@ -197,12 +236,6 @@ class YourProfileFragment :
 
     }
 
-
-    override fun initDataBinding() {
-        super.initDataBinding()
-
-
-    }
 
     override fun initAfterBinding() {
         super.initAfterBinding()

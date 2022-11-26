@@ -1,9 +1,11 @@
 package com.example.instagram
 
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -11,6 +13,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.instagram.databinding.FragmentMyProfileBinding
 import com.example.instagram.model.ContentDTO
+import com.example.instagram.model.FollowDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -20,9 +23,15 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
     var firestore: FirebaseFirestore? = null
     var uid: String? = null
     var auth: FirebaseAuth? = null
-    var currentUserUID: String? = null
     var imagesSnapshot: ListenerRegistration? = null
     var userID: String? = null
+    var currentUserUid: String? = null
+
+
+    var destinationUid: String? = null
+
+    var followListenerRegistration: ListenerRegistration? = null
+    var followingListenerRegistration: ListenerRegistration? = null
 
     companion object {
         var PICK_PROFILE_FROM_ALBUM = 10
@@ -30,27 +39,27 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
 
     override fun initStartView() {
         super.initStartView()
-        uid = arguments?.getString("destinationUid")
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-        currentUserUID = auth?.currentUser?.uid
         userID = auth?.currentUser?.email
+        currentUserUid = auth?.currentUser?.uid
 
+    }
 
-
+    override fun initDataBinding() {
+        super.initDataBinding()
 
         binding.accountSignout.setOnClickListener {
             (activity as MainActivity).hideNav()
             navController.navigate(R.id.action_myProfileFragment_to_signinFragment)
             auth?.signOut()
         }
-        getProfileImage()
 
+//        getProfileImage()
 
-    }
-
-    override fun initDataBinding() {
-        super.initDataBinding()
+//        getFollowing()
+//        getFollower()
+        getFollowerAndFollowing()
 
         binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
         binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
@@ -58,13 +67,55 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
         // 여기다가 binding
     }
 
-    override fun initAfterBinding() {
-        super.initAfterBinding()
+    fun getFollowerAndFollowing() {
+        setFragmentResultListener("destinationUid") { _, bundle ->
+            println("##########################getFollowerAndFollowing() My")
+            destinationUid = bundle.getString("uidList")
+            uid = destinationUid
+            firestore?.collection("users")?.document(currentUserUid!!)
+                ?.addSnapshotListener { documetSnapshot, firebaseFirestoreException ->
+                    if (documetSnapshot == null) return@addSnapshotListener
+                    var followDTO = documetSnapshot.toObject(FollowDTO::class.java)
+                    if (followDTO?.followingCount != null) {
+                        binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
+                    }
+                }
+        }
+    }
 
+    fun getFollowing() {
+        setFragmentResultListener("destinationUid") { _, bundle ->
+            println("##############################getFollowing() My")
+
+            destinationUid = bundle.getString("uidList")
+            uid = destinationUid
+            followingListenerRegistration = firestore?.collection("users")?.document(uid!!)
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    val followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
+                    if (followDTO == null) return@addSnapshotListener
+                    binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
+                }
+        }
+    }
+
+
+    fun getFollower() {
+        setFragmentResultListener("destinationUid") { _, bundle ->
+            println("##############################getFollower() My")
+
+            destinationUid = bundle.getString("uidList")
+            uid = destinationUid
+            followListenerRegistration = firestore?.collection("users")?.document(uid!!)
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    val followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
+                    if (followDTO == null) return@addSnapshotListener
+                    binding.accountTvFollowCount.text = followDTO.followerCount.toString()
+                }
+        }
     }
 
     fun getProfileImage() {
-        firestore?.collection("profileImages")?.document(currentUserUID!!)
+        firestore?.collection("profileImages")?.document(destinationUid!!)
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
                 if (documentSnapshot.data != null) {
@@ -73,17 +124,16 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
                         .load(url)
                         .apply(RequestOptions().circleCrop())
                         .into(binding.accountIvProfile)
-                 }
+                }
             }
     }
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var contentDTOs: ArrayList<ContentDTO>
+        var contentDTOs: ArrayList<ContentDTO> = ArrayList()
 
         init {
-            contentDTOs = ArrayList()
             imagesSnapshot = FirebaseFirestore
-                .getInstance().collection("images").whereEqualTo("uid", currentUserUID)
+                .getInstance().collection("images").whereEqualTo("uid", destinationUid)
                 ?.addSnapshotListener { querySnapshot, firebaseFiresrore ->
 
                     if (querySnapshot == null) return@addSnapshotListener
@@ -150,5 +200,10 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
             RecyclerView.ViewHolder(imageview) {
 
         }
+    }
+
+    override fun initAfterBinding() {
+        super.initAfterBinding()
+
     }
 }

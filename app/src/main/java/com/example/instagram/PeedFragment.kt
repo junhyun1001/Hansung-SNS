@@ -1,5 +1,6 @@
 package com.example.instagram
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,9 +38,6 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
         binding.detailviewfragmentRecyclerview.adapter = PeedAdapter()
         binding.detailviewfragmentRecyclerview.layoutManager =
             LinearLayoutManager(context) // 스크롤을 위아래로 할지, 좌우로 할지를 결정하는 것
-
-
-
     }
 
     inner class PeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -85,6 +84,12 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
 
+            setFragmentResult(
+                "destinationUid",
+                bundleOf("uidList" to contentUidList[position])
+            )
+            setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
+
             val viewHolder = (holder as CustomViewHolder).itemView
 
             // Profile Image 가져오기
@@ -103,6 +108,13 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             // 해당 게시물을 올린 유저 프로필로 이동
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_profile_image)
                 .setOnClickListener {
+//                    setFragmentResult(
+//                        "destinationUid",
+//                        bundleOf("uidList" to contentUidList[position])
+//                    )
+//                    setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
+//                    findNavController().navigate(R.id.action_peedFragment_to_userFragment)
+
                     val clickUser = contentDTOs[position].uid
                     // 해당 게시물을 올린 유저가 자기 계정일 때
                     if (uid != null && clickUser == uid) {
@@ -150,7 +162,10 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             // 댓글 눌렀을 때
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_comment_imageview)
                 .setOnClickListener {
-                    setFragmentResult("destinationUid", bundleOf("uidList" to contentUidList[position]))
+                    setFragmentResult(
+                        "destinationUid",
+                        bundleOf("uidList" to contentUidList[position])
+                    )
                     setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
                     findNavController().navigate(R.id.action_peedFragment_to_commentFragment)
                 }
