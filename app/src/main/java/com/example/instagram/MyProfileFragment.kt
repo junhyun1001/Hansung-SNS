@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.request.RequestOptions
 import com.example.instagram.model.ContentDTO
 
 class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragment_my_profile) {
@@ -26,6 +27,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
     var uid: String? = null
     var auth: FirebaseAuth? = null
     var currentUserUID: String? = null
+
     override fun initStartView() {
         super.initStartView()
         uid = arguments?.getString("destinationUid")
@@ -38,12 +40,12 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
 //        binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
 //        binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
 
-        binding.accountSignout.setOnClickListener {
-            (activity as MainActivity).hideNav()
-            navController.navigate(R.id.action_myProfileFragment_to_signinFragment)
-            auth?.signOut()
-        }
-        getProfileImage()
+//        binding.accountSignout.setOnClickListener {
+//            (activity as MainActivity).hideNav()
+//            navController.navigate(R.id.action_myProfileFragment_to_signinFragment)
+//            auth?.signOut()
+//        }
+//        getProfileImage()
 
     }
 
@@ -56,22 +58,6 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
     override fun initAfterBinding() {
         super.initAfterBinding()
 
-    }
-
-    fun getProfileImage() {
-        firestore?.collection("profileImages")?.document(currentUserUID!!)
-            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                if (documentSnapshot == null)
-                    return@addSnapshotListener
-                if (documentSnapshot.data != null) {
-                    var url = documentSnapshot?.data!!["image"]
-                    Glide.with(requireActivity())
-                        .load(url)
-                        .circleCrop()
-                        .into(binding.accountIvProfile)
-
-                }
-            }
     }
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -110,8 +96,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
 
             Glide.with(holder.itemView.context)
                 .load(contentDTOs[position].imageUrl)
-                .centerCrop()//이거 고쳐야함!
-//              .apply(new RequestOptions().centerCrop()) 원래 코드
+                .apply(RequestOptions().centerCrop())
                 .into(imageview); }
 
         override fun getItemCount(): Int {

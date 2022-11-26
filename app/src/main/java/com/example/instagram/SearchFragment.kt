@@ -3,12 +3,14 @@ package com.example.instagram
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.instagram.databinding.FragmentSearchBinding
 import com.example.instagram.model.ContentDTO
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 
@@ -34,8 +36,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
     inner class GridFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var contentDTOs: ArrayList<ContentDTO>
+        var uid: String? = null
 
         init {
+            uid = FirebaseAuth.getInstance().currentUser?.uid
+
             contentDTOs = ArrayList()
             imagesSnapshot = FirebaseFirestore
                 .getInstance().collection("images").orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
@@ -71,6 +76,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             // 이미지 클릭하면 해당 유저의 프로필이 보임
             imageView.setOnClickListener {
                 println("유저 페이지 들어가기")
+
 //                val fragment = UserFragment()
 //                val bundle = Bundle()
 //

@@ -1,7 +1,5 @@
 package com.example.instagram
 
-import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -150,11 +148,6 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                 .setOnClickListener {
                     setFragmentResult("destinationUid", bundleOf("uidList" to contentUidList[position]))
                     setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
-                    Log.d("id",contentDTOs[position].uid.toString())
-
-                    val result = "result"
-                    setFragmentResult("requestKey", bundleOf("bundleKey" to result))
-
                     findNavController().navigate(R.id.action_peedFragment_to_commentFragment)
                 }
         }
