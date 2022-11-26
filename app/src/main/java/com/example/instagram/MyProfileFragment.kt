@@ -57,20 +57,16 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
 
 //        getProfileImage()
 
-//        getFollowing()
-//        getFollower()
         getFollowerAndFollowing()
 
         binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
         binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
         binding.userName.text = userID
-        // 여기다가 binding
     }
 
     fun getFollowerAndFollowing() {
-        setFragmentResultListener("destinationUid") { _, bundle ->
-            println("##########################getFollowerAndFollowing() My")
-            destinationUid = bundle.getString("uidList")
+        setFragmentResultListener("userId") { _, bundle ->
+            destinationUid = bundle.getString("DTOs")
             uid = destinationUid
             firestore?.collection("users")?.document(uid!!)
                 ?.addSnapshotListener { documetSnapshot, firebaseFirestoreException ->
@@ -78,6 +74,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
                     var followDTO = documetSnapshot.toObject(FollowDTO::class.java)
                     if (followDTO?.followingCount != null) {
                         binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
+
                     }
                     if (followDTO?.followerCount != null) {
                         binding.accountTvFollowCount.text = followDTO.followerCount.toString()
@@ -86,36 +83,6 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
         }
     }
 
-    fun getFollowing() {
-        setFragmentResultListener("destinationUid") { _, bundle ->
-            println("##############################getFollowing() My")
-
-            destinationUid = bundle.getString("uidList")
-            uid = destinationUid
-            followingListenerRegistration = firestore?.collection("users")?.document(uid!!)
-                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    val followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
-                    if (followDTO == null) return@addSnapshotListener
-                    binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
-                }
-        }
-    }
-
-
-    fun getFollower() {
-        setFragmentResultListener("destinationUid") { _, bundle ->
-            println("##############################getFollower() My")
-
-            destinationUid = bundle.getString("uidList")
-            uid = destinationUid
-            followListenerRegistration = firestore?.collection("users")?.document(uid!!)
-                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    val followDTO = documentSnapshot?.toObject(FollowDTO::class.java)
-                    if (followDTO == null) return@addSnapshotListener
-                    binding.accountTvFollowCount.text = followDTO.followerCount.toString()
-                }
-        }
-    }
 
     fun getProfileImage() {
         firestore?.collection("profileImages")?.document(destinationUid!!)

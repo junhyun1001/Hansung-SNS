@@ -63,7 +63,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="post" />
+                        android:text="게시물" />
 
                     <TextView
                         android:id="@+id/account_tv_post_count"
@@ -82,7 +82,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="follow" />
+                        android:text="팔로워" />
 
                     <TextView
                         android:id="@+id/account_tv_follow_count"
@@ -102,7 +102,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="following" />
+                        android:text="팔로잉" />
 
                     <TextView
                         android:id="@+id/account_tv_following_count"
