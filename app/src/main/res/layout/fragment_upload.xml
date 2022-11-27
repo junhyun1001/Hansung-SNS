@@ -20,9 +20,17 @@
 
         <ImageView
             android:id="@+id/addphoto_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="413dp"
+            android:layout_height="98dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/plus"
+            app:layout_constraintBottom_toTopOf="@+id/editText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_division"
+            app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -33,23 +41,40 @@
             app:layout_constraintLeft_toRightOf="@+id/addphoto_image"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_division">
 
-            <EditText
-                android:id="@+id/addphoto_edit_explain"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:gravity="top"
-                android:hint="Image description" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/addphoto_btn_upload"
             android:layout_width="310dp"
             android:layout_height="wrap_content"
-            android:text="upload_image"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="200dp"
+
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/buttnd"
+            android:backgroundTint="@color/facebook"
+            android:text="upload  image"
+            android:textColor="@color/white"
+            android:theme="@style/Widget.AppCompat.Button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/addphoto_image"
-            app:layout_constraintTop_toBottomOf="@+id/editText"
-            android:theme="@style/Widget.AppCompat.Button"/>
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+        <EditText
+            android:id="@+id/addphoto_edit_explain"
+            android:layout_width="261dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="70dp"
+            android:background="@android:color/transparent"
+            android:gravity="top"
+            android:hint="             게시글을 입력하세요"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/addphoto_btn_upload"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addphoto_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

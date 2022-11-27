@@ -24,7 +24,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_toRightOf="@+id/account_iv_profile"
-                android:text="팔로우하기" />
+                android:text="팔로우하기"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/buttnd"
+                android:backgroundTint="@color/facebook"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,13 +47,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Post" />
+                        android:text="Post"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
 
                     <TextView
                         android:id="@+id/account_tv_post_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0" />
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -62,13 +72,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Follow" />
+                        android:text="Follow"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
 
                     <TextView
                         android:id="@+id/account_tv_follow_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0" />
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -81,13 +97,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Following" />
+                        android:text="Following"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
 
                     <TextView
                         android:id="@+id/account_tv_following_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0" />
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
                 </LinearLayout>
             </LinearLayout>
 
