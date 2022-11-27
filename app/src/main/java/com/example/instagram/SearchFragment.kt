@@ -60,16 +60,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                     followings
                 )
             }
-        binding.autoCompleteTextview.setAdapter(adapter)
-        binding.autoCompleteTextview.setOnItemClickListener { adapterView, view, position, rowId ->
-            println(
-                "position: $position, rowId: $rowId, string: ${
-                    adapterView.getItemAtPosition(
-                        position
-                    )
-                }"
-            )
-        }
+//        binding.autoCompleteTextview.setAdapter(adapter)
+//        binding.autoCompleteTextview.setOnItemClickListener { adapterView, view, position, rowId ->
+//            println(
+//                "position: $position, rowId: $rowId, string: ${
+//                    adapterView.getItemAtPosition(
+//                        position
+//                    )
+//                }"
+//            )
+//        }
 
 
 
@@ -103,7 +103,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
             data?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot != null) {
                     val x = documentSnapshot.data.toString()
-                    binding.textView.text = x
+//                    binding.textView.text = x
                 }
             }
         }

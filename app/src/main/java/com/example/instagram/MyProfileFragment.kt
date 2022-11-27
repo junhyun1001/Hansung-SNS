@@ -63,7 +63,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
 
         binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
         binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
-        binding.userName.text = userID
+//        binding.userName.text = userID
     }
 
     fun getFollowerAndFollowing() {

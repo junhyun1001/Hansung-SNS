@@ -17,6 +17,7 @@ class SigninFragment : BaseFragment<FragmentSigninBinding>(R.layout.fragment_sig
     override fun onStart() {
         super.onStart()
         moveMainPage(auth?.currentUser)
+        (activity as MainActivity).hideToolbar()
     }
 
     override fun initDataBinding() {

@@ -32,6 +32,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
     override fun initStartView() {
         super.initStartView()
         (activity as MainActivity).showNav()
+        (activity as MainActivity).showToolbar()
 
         firestore = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().currentUser?.uid

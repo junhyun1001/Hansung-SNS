@@ -39,15 +39,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        binding!!.bottomNavigation.visibility = View.VISIBLE
+//        binding!!.bottomNavigation.visibility = View.VISIBLE
     }
 
     fun showNav() {
-        binding!!.bottomNavigation.visibility = View.VISIBLE
+//        binding!!.bottomNavigation.visibility = View.VISIBLE
     }
 
     fun hideNav() {
-        binding!!.bottomNavigation.visibility = View.GONE
+//        binding!!.bottomNavigation.visibility = View.GONE
+    }
+
+    fun hideToolbar() {
+//        binding!!.myToolbar.visibility = View.GONE
+    }
+
+    fun showToolbar() {
+//        binding!!.myToolbar.visibility = View.VISIBLE
     }
 
     override fun onStart() {
