@@ -42,7 +42,14 @@
         android:id="@+id/searchFragment"
         android:name="com.example.instagram.SearchFragment"
         android:label="searchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_yourProfileFragment"
+            app:destination="@id/yourProfileFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/uploadFragment"

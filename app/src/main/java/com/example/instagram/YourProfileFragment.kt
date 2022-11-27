@@ -46,7 +46,6 @@ class YourProfileFragment :
         getFollowerAndFollowing()
 
 
-
     }
 
     override fun initDataBinding() {
@@ -66,9 +65,9 @@ class YourProfileFragment :
             destinationUid = bundle.getString("DTOsUid")
             uid = destinationUid
             firestore?.collection("users")?.document(uid!!)
-                ?.addSnapshotListener { documetSnapshot, firebaseFirestoreException ->
-                    if (documetSnapshot == null) return@addSnapshotListener
-                    var followDTO = documetSnapshot.toObject(FollowDTO::class.java)
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    if (documentSnapshot == null) return@addSnapshotListener
+                    var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
                     if (followDTO?.followingCount != null) {
                         binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
                     }
@@ -100,12 +99,12 @@ class YourProfileFragment :
             if (followDTO.followings.containsKey(uid)) {
                 followDTO.followingCount = followDTO.followingCount - 1
                 followDTO.followings.remove(uid)
-//                binding.accountBtnFollow.text = "팔로우"
+                binding.accountBtnFollow.text = "팔로우"
 
             } else { // 내가 팔로우 하지 않은 상태(팔로우 버튼이 떠 있어야 함)
                 followDTO.followingCount = followDTO.followingCount + 1
                 followDTO.followings[uid!!] = true
-//                binding.accountBtnFollow.text = "언팔로우"
+                binding.accountBtnFollow.text = "언팔로우"
 //                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollowing, followDTO)

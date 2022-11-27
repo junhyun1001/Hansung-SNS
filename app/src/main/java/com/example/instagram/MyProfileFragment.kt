@@ -44,6 +44,8 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
         userID = auth?.currentUser?.email
         currentUserUid = auth?.currentUser?.uid
 
+        getProfileImage()
+
     }
 
     override fun initDataBinding() {
@@ -65,22 +67,22 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
     }
 
     fun getFollowerAndFollowing() {
-            firestore?.collection("users")?.document(currentUserUid!!)
-                ?.addSnapshotListener { documetSnapshot, firebaseFirestoreException ->
-                    if (documetSnapshot == null) return@addSnapshotListener
-                    var followDTO = documetSnapshot.toObject(FollowDTO::class.java)
-                    if (followDTO?.followingCount != null) {
-                        binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
-                    }
-                    if (followDTO?.followerCount != null) {
-                        binding.accountTvFollowCount.text = followDTO.followerCount.toString()
-                    }
+        firestore?.collection("users")?.document(currentUserUid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+                var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
+                if (followDTO?.followingCount != null) {
+                    binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
                 }
+                if (followDTO?.followerCount != null) {
+                    binding.accountTvFollowCount.text = followDTO.followerCount.toString()
+                }
+            }
     }
 
 
     fun getProfileImage() {
-        firestore?.collection("profileImages")?.document(destinationUid!!)
+        firestore?.collection("profileImages")?.document(currentUserUid!!)
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
                 if (documentSnapshot.data != null) {
@@ -98,7 +100,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
 
         init {
             imagesSnapshot = FirebaseFirestore
-                .getInstance().collection("images").whereEqualTo("uid", destinationUid)
+                .getInstance().collection("images").whereEqualTo("uid", currentUserUid)
                 ?.addSnapshotListener { querySnapshot, firebaseFiresrore ->
 
                     if (querySnapshot == null) return@addSnapshotListener
@@ -162,9 +164,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
         }
 
         inner class CustomViewHolder(var imageview: ImageView) :
-            RecyclerView.ViewHolder(imageview) {
-
-        }
+            RecyclerView.ViewHolder(imageview)
     }
 
     override fun initAfterBinding() {

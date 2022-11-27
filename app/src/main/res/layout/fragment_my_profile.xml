@@ -117,6 +117,8 @@
             android:id="@+id/account_recyclerview"
             android:layout_width="416dp"
             android:layout_height="610dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/table"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="-5dp" />
