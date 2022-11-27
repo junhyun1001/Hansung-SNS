@@ -25,4 +25,10 @@
         android:enabled="true"
         android:icon="@drawable/ic_account"
         android:title="profile" />
+
+<!--    <item-->
+<!--        android:id="@+id/userFragment"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/ic_account"-->
+<!--        android:title="profile" />-->
 </menu>

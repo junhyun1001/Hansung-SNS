@@ -2,6 +2,7 @@ package com.example.instagram
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -63,7 +64,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                     contentDTOs.clear()
                     contentUidList.clear()
                     if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentDTOs.add(item!!)
                         contentUidList.add(snapshot.id)
@@ -108,13 +109,34 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             // 해당 게시물을 올린 유저 프로필로 이동
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_profile_image)
                 .setOnClickListener {
+
+//                    val fragment = UserFragment()
+//                    val bundle = Bundle()
+//
+//                    bundle.putString("destinationUid", contentDTOs[position].uid)
+//                    bundle.putString("userId", contentDTOs[position].userId)
+//
+//                    fragment.arguments = bundle
+//                    findNavController().navigate(R.id.action_peedFragment_to_userFragment)
+
+
                     val clickUser = contentDTOs[position].uid
                     // 해당 게시물을 올린 유저가 자기 계정일 때
                     if (uid != null && clickUser == uid) {
-                        setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
+//                        println("###############   uid: $uid")
+//                        setFragmentResult("userId", bundleOf("uid" to uid))
+                        println("###############   destinationUid: ${contentDTOs[position].uid}")
+                        println("###############   userId: ${contentDTOs[position].userId}")
+                        setFragmentResult("destinationUid", bundleOf("uid" to uid))
+                        setFragmentResult("userId", bundleOf("DTOsUserId" to contentDTOs[position].userId))
+
                         findNavController().navigate(R.id.action_peedFragment_to_myProfileFragment)
                     } else {
-                        setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
+//                        println("@@@@@@@@@@@@@@@   uid: ${contentDTOs[position].uid}")
+                        println("@@@@@@@@@@@@@@@   destinationUid: ${contentDTOs[position].uid}")
+                        println("@@@@@@@@@@@@@@@   userId: ${contentDTOs[position].userId}")
+                        setFragmentResult("destinationUid", bundleOf("DTOsUid" to contentDTOs[position].uid))
+                        setFragmentResult("userId", bundleOf("DTOsUserId" to contentDTOs[position].userId))
                         findNavController().navigate(R.id.action_peedFragment_to_yourProfileFragment)
                     }
                 }

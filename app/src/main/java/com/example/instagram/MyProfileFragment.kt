@@ -65,22 +65,17 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
     }
 
     fun getFollowerAndFollowing() {
-        setFragmentResultListener("userId") { _, bundle ->
-            destinationUid = bundle.getString("DTOs")
-            uid = destinationUid
-            firestore?.collection("users")?.document(uid!!)
+            firestore?.collection("users")?.document(currentUserUid!!)
                 ?.addSnapshotListener { documetSnapshot, firebaseFirestoreException ->
                     if (documetSnapshot == null) return@addSnapshotListener
                     var followDTO = documetSnapshot.toObject(FollowDTO::class.java)
                     if (followDTO?.followingCount != null) {
                         binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
-
                     }
                     if (followDTO?.followerCount != null) {
                         binding.accountTvFollowCount.text = followDTO.followerCount.toString()
                     }
                 }
-        }
     }
 
 

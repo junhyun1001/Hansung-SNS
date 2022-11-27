@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +43,10 @@ class YourProfileFragment :
         firestore = FirebaseFirestore.getInstance()
         currentUserUid = auth?.currentUser?.uid
 
+        getFollowerAndFollowing()
+
+
+
     }
 
     override fun initDataBinding() {
@@ -54,14 +61,9 @@ class YourProfileFragment :
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        getFollowerAndFollowing()
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     fun getFollowerAndFollowing() {
-        setFragmentResultListener("userId") { _, bundle ->
-            destinationUid = bundle.getString("DTOs")
+        setFragmentResultListener("destinationUid") { _, bundle ->
+            destinationUid = bundle.getString("DTOsUid")
             uid = destinationUid
             firestore?.collection("users")?.document(uid!!)
                 ?.addSnapshotListener { documetSnapshot, firebaseFirestoreException ->
