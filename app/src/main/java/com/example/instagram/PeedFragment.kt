@@ -93,17 +93,17 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             val viewHolder = (holder as CustomViewHolder).itemView
 
             // Profile Image 가져오기
-            firestore?.collection("profileImages")?.document(contentDTOs[position].uid!!)
-                ?.get()?.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-
-                        val url = task.result["image"]
-                        Glide.with(holder.itemView.context)
-                            .load(url)
-                            .apply(RequestOptions().circleCrop())
-                            .into(viewHolder.findViewById(R.id.detailviewitem_profile_image))
-                    }
-                }
+//            firestore?.collection("profileImages")?.document(contentDTOs[position].uid!!)
+//                ?.get()?.addOnCompleteListener { task ->
+//                    if (task.isSuccessful) {
+//
+//                        val url = task.result["image"]
+//                        Glide.with(holder.itemView.context)
+//                            .load(url)
+//                            .apply(RequestOptions().circleCrop())
+//                            .into(viewHolder.findViewById(R.id.detailviewitem_profile_image))
+//                    }
+//                }
 
             // 해당 게시물을 올린 유저 프로필로 이동
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_profile_image)

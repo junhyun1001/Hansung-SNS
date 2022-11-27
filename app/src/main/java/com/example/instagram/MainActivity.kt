@@ -43,11 +43,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showNav() {
-//        binding!!.bottomNavigation.visibility = View.VISIBLE
+        binding!!.bottomNavigation.visibility = View.VISIBLE
     }
 
     fun hideNav() {
-//        binding!!.bottomNavigation.visibility = View.GONE
+        binding!!.bottomNavigation.visibility = View.GONE
     }
 
     fun hideToolbar() {

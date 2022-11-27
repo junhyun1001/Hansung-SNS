@@ -14,7 +14,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_margin="7.5dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/boogiehead" />
 
         <TextView
             android:id="@+id/detailviewitem_profile_textview"
