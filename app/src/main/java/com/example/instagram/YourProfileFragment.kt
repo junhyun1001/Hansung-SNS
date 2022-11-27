@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.instagram.databinding.FragmentYourProfileBinding
+import com.example.instagram.model.AlarmDTO
 import com.example.instagram.model.ContentDTO
 import com.example.instagram.model.FollowDTO
 import com.google.firebase.auth.FirebaseAuth
@@ -123,6 +124,8 @@ class YourProfileFragment :
                 followDTO!!.followers[currentUserUid!!] = true
 
                 transaction.set(tsDocFollower, followDTO!!)
+                followerAlarm(uid!!)
+
                 return@runTransaction
             }
 
@@ -134,12 +137,26 @@ class YourProfileFragment :
             } else { // 상대방 계정을 팔로우 하지 않았을 경우
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
-
+                followerAlarm(uid!!)
             }// Star the post and add self to stars
 
             transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
         }
+    }
+
+    fun followerAlarm(destinationUid: String) {
+
+        val alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = auth?.currentUser!!.email
+        alarmDTO.uid = auth?.currentUser!!.uid
+        alarmDTO.kind = 2
+        alarmDTO.timestamp = System.currentTimeMillis()
+
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+//        var message = auth?.currentUser!!.email + getString(R.string.alarm_follow)
+//        fcmPush?.sendMessage(destinationUid, "알림 메세지 입니다.", message)
     }
 
 

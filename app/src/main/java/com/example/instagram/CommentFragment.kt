@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.instagram.databinding.FragmentCommentBinding
+import com.example.instagram.model.AlarmDTO
 import com.example.instagram.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -44,6 +45,10 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
                 .document()
                 .set(comment)
 
+            setFragmentResultListener("destinationUid") { _, bundle ->
+                destinationUid = bundle.getString("DTOsUid")
+                commentAlarm(destinationUid!!, binding.commentEditMessage.text.toString())
+            }
             binding.commentEditMessage.text = null
         }
 
@@ -119,6 +124,22 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
             return comments.size
         }
 
+    }
+
+    fun commentAlarm(destinationUid: String, message: String) {
+
+        val alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.kind = 1
+        alarmDTO.message = message
+        alarmDTO.timestamp = System.currentTimeMillis()
+
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+//        var message = user?.email + getString(R.string.alarm_who) + message + getString(R.string.alarm_comment)
+//        fcmPush?.sendMessage(destinationUid, "알림 메세지 입니다.", message)
     }
 
     override fun initAfterBinding() {

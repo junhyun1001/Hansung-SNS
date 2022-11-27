@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.instagram.databinding.FragmentPeedBinding
+import com.example.instagram.model.AlarmDTO
 import com.example.instagram.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -118,20 +119,25 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                     } else {
                         println("@@@@@@@@@@@@@@@   destinationUid: ${contentDTOs[position].uid}")
                         println("@@@@@@@@@@@@@@@   userId: ${contentDTOs[position].userId}")
-                        setFragmentResult("destinationUid", bundleOf("DTOsUid" to contentDTOs[position].uid))
+                        setFragmentResult(
+                            "destinationUid",
+                            bundleOf("DTOsUid" to contentDTOs[position].uid)
+                        )
                         findNavController().navigate(R.id.action_peedFragment_to_yourProfileFragment)
                     }
                 }
 
-            viewHolder.findViewById<ImageView>(R.id.detailviewitem_imageview_content).setOnClickListener {
-                if(System.currentTimeMillis() > delay){
-                    delay = System.currentTimeMillis() + 200
-                    return@setOnClickListener
+            // 이미지 더블클릭시 좋아요 이벤트 처리
+            viewHolder.findViewById<ImageView>(R.id.detailviewitem_imageview_content)
+                .setOnClickListener {
+                    if (System.currentTimeMillis() > delay) {
+                        delay = System.currentTimeMillis() + 200
+                        return@setOnClickListener
+                    }
+                    if (System.currentTimeMillis() <= delay) {
+                        favoriteEvent(position)
+                    }
                 }
-                if(System.currentTimeMillis() <= delay) {
-                    favoriteEvent(position)
-                }
-            }
 
             // 유저 아이디
             viewHolder.findViewById<TextView>(R.id.detailviewitem_profile_textview).text =
@@ -198,10 +204,24 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                 } else {
                     contentDTO.favoriteCount = contentDTO.favoriteCount + 1
                     contentDTO.favorites[uid] = true
-//                favoriteAlarm(contentDTOs[position].uid!!)
+                    favoriteAlarm(contentDTOs[position].uid!!)
                 }
                 transaction.set(tsDoc, contentDTO)
             }
+        }
+
+        fun favoriteAlarm(destinationUid: String) {
+
+            val alarmDTO = AlarmDTO()
+            alarmDTO.destinationUid = destinationUid
+            alarmDTO.userId = user?.email
+            alarmDTO.uid = user?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp = System.currentTimeMillis()
+
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+//            var message = user?.email + getString(R.string.alarm_favorite)
+//            fcmPush?.sendMessage(destinationUid, "알림 메세지 입니다.", message)
         }
 
 
