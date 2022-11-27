@@ -27,11 +27,14 @@
             android:id="@+id/action_peedFragment_to_commentFragment"
             app:destination="@id/commentFragment" />
         <action
-            android:id="@+id/action_peedFragment_to_yourProfileFragment"
-            app:destination="@id/yourProfileFragment" />
+            android:id="@+id/action_peedFragment_to_userFragment"
+            app:destination="@id/userFragment" />
         <action
             android:id="@+id/action_peedFragment_to_myProfileFragment"
             app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_peedFragment_to_yourProfileFragment"
+            app:destination="@id/yourProfileFragment" />
     </fragment>
 
 
@@ -39,7 +42,14 @@
         android:id="@+id/searchFragment"
         android:name="com.example.instagram.SearchFragment"
         android:label="searchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_yourProfileFragment"
+            app:destination="@id/yourProfileFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/uploadFragment"
@@ -88,5 +98,15 @@
         android:name="com.example.instagram.CommentFragment"
         android:label="commentFragment"
         tools:layout="@layout/fragment_comment" />
+
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.instagram.UserFragment"
+        android:label="userFragment"
+        tools:layout="@layout/fragment_user" >
+        <action
+            android:id="@+id/action_userFragment_to_signinFragment"
+            app:destination="@id/signinFragment" />
+    </fragment>
 
 </navigation>

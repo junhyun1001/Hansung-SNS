@@ -24,6 +24,7 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
 
     override fun initStartView() {
         super.initStartView()
+        (activity as MainActivity).hideNav()
     }
 
     override fun initDataBinding() {

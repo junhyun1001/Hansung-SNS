@@ -4,16 +4,19 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.instagram.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
 
+    var firestore: FirebaseFirestore? = null
     private var auth: FirebaseAuth? = null
     private var user: FirebaseUser? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,8 +24,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        hideNav()
         setBottomNav()
+
+        hideNav()
     }
 
     private fun setBottomNav() {

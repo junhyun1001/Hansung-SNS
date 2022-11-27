@@ -1,14 +1,15 @@
 package com.example.instagram
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,8 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
     var uid: String? = null
     var user: FirebaseUser? = null
 
+    var image: ImageView? = null
+
     override fun initStartView() {
         super.initStartView()
         (activity as MainActivity).showNav()
@@ -34,13 +37,11 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
         uid = FirebaseAuth.getInstance().currentUser?.uid
         user = FirebaseAuth.getInstance().currentUser
 
+
         // 리사이클러 뷰를 사용하려면 두 가지가 필수적으로 필요하다. Adpater와 LayoutManager이다.
         binding.detailviewfragmentRecyclerview.adapter = PeedAdapter()
         binding.detailviewfragmentRecyclerview.layoutManager =
             LinearLayoutManager(context) // 스크롤을 위아래로 할지, 좌우로 할지를 결정하는 것
-
-
-
     }
 
     inner class PeedAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -52,6 +53,8 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
 
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
         var contentUidList: ArrayList<String> = arrayListOf()
+
+        var delay: Long = 0
 
         init {
             firestore = FirebaseFirestore.getInstance()
@@ -66,7 +69,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                     contentDTOs.clear()
                     contentUidList.clear()
                     if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentDTOs.add(item!!)
                         contentUidList.add(snapshot.id)
@@ -86,7 +89,6 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-
             val viewHolder = (holder as CustomViewHolder).itemView
 
             // Profile Image 가져오기
@@ -105,14 +107,30 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             // 해당 게시물을 올린 유저 프로필로 이동
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_profile_image)
                 .setOnClickListener {
+
                     val clickUser = contentDTOs[position].uid
                     // 해당 게시물을 올린 유저가 자기 계정일 때
                     if (uid != null && clickUser == uid) {
+                        println("###############   destinationUid: ${contentDTOs[position].uid}")
+                        println("###############   userId: ${contentDTOs[position].userId}")
                         findNavController().navigate(R.id.action_peedFragment_to_myProfileFragment)
                     } else {
+                        println("@@@@@@@@@@@@@@@   destinationUid: ${contentDTOs[position].uid}")
+                        println("@@@@@@@@@@@@@@@   userId: ${contentDTOs[position].userId}")
+                        setFragmentResult("destinationUid", bundleOf("DTOsUid" to contentDTOs[position].uid))
                         findNavController().navigate(R.id.action_peedFragment_to_yourProfileFragment)
                     }
                 }
+
+            viewHolder.findViewById<ImageView>(R.id.detailviewitem_imageview_content).setOnClickListener {
+                if(System.currentTimeMillis() > delay){
+                    delay = System.currentTimeMillis() + 200
+                    return@setOnClickListener
+                }
+                if(System.currentTimeMillis() <= delay) {
+                    favoriteEvent(position)
+                }
+            }
 
             // 유저 아이디
             viewHolder.findViewById<TextView>(R.id.detailviewitem_profile_textview).text =
@@ -129,6 +147,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             // 좋아요 이벤트
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_favorite_imageview)
                 .setOnClickListener { favoriteEvent(position) }
+
 
             //좋아요 버튼 설정
             if (contentDTOs[position].favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
@@ -148,13 +167,11 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             // 댓글 눌렀을 때
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_comment_imageview)
                 .setOnClickListener {
-                    setFragmentResult("destinationUid", bundleOf("uidList" to contentUidList[position]))
+                    setFragmentResult(
+                        "destinationUid",
+                        bundleOf("uidList" to contentUidList[position])
+                    )
                     setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
-                    Log.d("id",contentDTOs[position].uid.toString())
-
-                    val result = "result"
-                    setFragmentResult("requestKey", bundleOf("bundleKey" to result))
-
                     findNavController().navigate(R.id.action_peedFragment_to_commentFragment)
                 }
         }
