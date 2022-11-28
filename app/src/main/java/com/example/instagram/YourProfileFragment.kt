@@ -29,13 +29,14 @@ class YourProfileFragment :
     var auth: FirebaseAuth? = null
     var uid: String? = null
     var currentUserUid: String? = null
-
+    var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
     var destinationUid: String? = null
 
     var followListenerRegistration: ListenerRegistration? = null
     var followingListenerRegistration: ListenerRegistration? = null
 
     var userId: String? = null
+
 
     override fun initStartView() {
         super.initStartView()
@@ -44,7 +45,7 @@ class YourProfileFragment :
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
         currentUserUid = auth?.currentUser?.uid
-
+//        destinationUid =
         getFollowerAndFollowing()
 
     }
@@ -58,6 +59,7 @@ class YourProfileFragment :
 
         binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
         binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
+//        binding.username.text =
 
     }
 
@@ -67,6 +69,7 @@ class YourProfileFragment :
             println("^^^^^^^^^^^^^^^^^^^^^^^ $userId")
             setFragmentResultListener("destinationUid") { _, bundle ->
                 // 여기서 binding.textview해서 아이디 바꿔야됨
+                binding.username.text = userId
                 destinationUid = bundle.getString("DTOsUid")
                 uid = destinationUid
                 firestore?.collection("users")?.document(uid!!)

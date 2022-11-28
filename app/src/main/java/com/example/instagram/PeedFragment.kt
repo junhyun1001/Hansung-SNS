@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import org.w3c.dom.Text
 
 class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
     var firestore: FirebaseFirestore? = null
@@ -175,6 +176,9 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             viewHolder.findViewById<TextView>(R.id.detailviewitem_favoritecounter_textview).text =
                 "좋아요 ${contentDTOs[position].favoriteCount}개"
 
+            //댓글 카운터 설정
+            viewHolder.findViewById<TextView>(R.id.detailviewitem_comment_textview).text =
+                    "댓글 ${contentDTOs[position].commentCount}개"
             // 댓글 눌렀을 때
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_comment_imageview)
                 .setOnClickListener {
@@ -184,6 +188,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                     )
                     setFragmentResult("userId", bundleOf("DTOs" to contentDTOs[position].uid))
                     findNavController().navigate(R.id.action_peedFragment_to_commentFragment)
+
                 }
         }
 

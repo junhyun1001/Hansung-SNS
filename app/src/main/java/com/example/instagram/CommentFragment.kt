@@ -23,6 +23,7 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
     var destinationUid: String? = null
     var commentSnapshot: ListenerRegistration? = null
 
+
     override fun initStartView() {
         super.initStartView()
         (activity as MainActivity).hideNav()
@@ -78,6 +79,7 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
                             if (querySnapshot == null) return@addSnapshotListener
                             for (snapshot in querySnapshot.documents) {
                                 comments.add(snapshot.toObject(ContentDTO.Comment::class.java)!!)
+
                             }
                             notifyDataSetChanged()
                         }

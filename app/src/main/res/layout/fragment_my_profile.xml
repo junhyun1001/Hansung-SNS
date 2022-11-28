@@ -7,15 +7,30 @@
         android:layout_height="match_parent"
         tools:context=".MyProfileFragment">
 
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/table"
+            android:text="username"
+            android:gravity="left"
+            android:layout_marginLeft="8dp"
+            android:textStyle = "bold"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/table"
+            tools:ignore="MissingConstraints" />
+
         <RelativeLayout
-            android:layout_margin="4dp"
             android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_margin="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints">
+
 
             <ImageView
                 android:id="@+id/account_iv_profile"
@@ -63,9 +78,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:textColor="@color/black"
                         android:textSize="16dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -89,8 +104,8 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -113,9 +128,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:textColor="@color/black"
                         android:textSize="16dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
