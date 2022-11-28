@@ -76,6 +76,16 @@ class YourProfileFragment :
                         if (followDTO?.followingCount != null) {
                             binding.accountTvFollowingCount.text =
                                 followDTO.followingCount.toString()
+                            // currentUserUid: 현재 접속된 계정
+                            // uid: 상대방 계정
+//                            var followers = followDTO.followers[currentUserUid]
+//                            println(followers)
+//                            println(currentUserUid)
+                            if(followDTO.followers[currentUserUid] == true) {
+                                binding.accountBtnFollow.text = "언팔로우하기"
+                            }
+                            else
+                                binding.accountBtnFollow.text = "팔로우하기"
                         }
                         if (followDTO?.followerCount != null) {
                             binding.accountTvFollowCount.text = followDTO.followerCount.toString()
@@ -106,13 +116,11 @@ class YourProfileFragment :
             if (followDTO.followings.containsKey(uid)) {
                 followDTO.followingCount = followDTO.followingCount - 1
                 followDTO.followings.remove(uid)
-                binding.accountBtnFollow.text = "팔로우"
 
             } else { // 내가 팔로우 하지 않은 상태(팔로우 버튼이 떠 있어야 함)
                 followDTO.followingCount = followDTO.followingCount + 1
                 followDTO.followings[uid!!] = true
-                binding.accountBtnFollow.text = "언팔로우"
-//                followerAlarm(uid!!)
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollowing, followDTO)
             return@runTransaction
