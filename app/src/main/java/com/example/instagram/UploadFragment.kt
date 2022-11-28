@@ -1,19 +1,13 @@
 package com.example.instagram
 
+//import com.example.hanstargram.navigation.model.ContentDTO
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.FragmentTransaction
 import com.example.instagram.databinding.FragmentUploadBinding
 import com.example.instagram.model.ContentDTO
-//import com.example.hanstargram.navigation.model.ContentDTO
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,11 +40,13 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
             //사진 업로드 후 재시도 할 시 프래그먼트가 피드로 완전히 바뀌어 있음
         }
         binding.addphotoImage.setOnClickListener {
+
             launcher.launch(photoPickerIntent)
         }
 
 
     }
+
 
     val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -64,7 +60,6 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
                 activity?.finish()
             }
         }
-
 
     override fun initDataBinding() {
         super.initDataBinding()

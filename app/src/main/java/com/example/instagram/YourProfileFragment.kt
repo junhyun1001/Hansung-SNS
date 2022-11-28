@@ -35,6 +35,7 @@ class YourProfileFragment :
     var followListenerRegistration: ListenerRegistration? = null
     var followingListenerRegistration: ListenerRegistration? = null
 
+    var userId: String? = null
 
     override fun initStartView() {
         super.initStartView()
@@ -45,7 +46,6 @@ class YourProfileFragment :
         currentUserUid = auth?.currentUser?.uid
 
         getFollowerAndFollowing()
-
 
     }
 
@@ -62,26 +62,32 @@ class YourProfileFragment :
     }
 
     fun getFollowerAndFollowing() {
-        setFragmentResultListener("destinationUid") { _, bundle ->
-            destinationUid = bundle.getString("DTOsUid")
-            uid = destinationUid
-            firestore?.collection("users")?.document(uid!!)
-                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    if (documentSnapshot == null) return@addSnapshotListener
-                    var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
-                    if (followDTO?.followingCount != null) {
-                        binding.accountTvFollowingCount.text = followDTO.followingCount.toString()
+        setFragmentResultListener("userId") { _, bundle ->
+            userId = bundle.getString("DTOsUserId")
+            println("^^^^^^^^^^^^^^^^^^^^^^^ $userId")
+            setFragmentResultListener("destinationUid") { _, bundle ->
+                // 여기서 binding.textview해서 아이디 바꿔야됨
+                destinationUid = bundle.getString("DTOsUid")
+                uid = destinationUid
+                firestore?.collection("users")?.document(uid!!)
+                    ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                        if (documentSnapshot == null) return@addSnapshotListener
+                        var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
+                        if (followDTO?.followingCount != null) {
+                            binding.accountTvFollowingCount.text =
+                                followDTO.followingCount.toString()
+                        }
+                        if (followDTO?.followerCount != null) {
+                            binding.accountTvFollowCount.text = followDTO.followerCount.toString()
+                        }
                     }
-                    if (followDTO?.followerCount != null) {
-                        binding.accountTvFollowCount.text = followDTO.followerCount.toString()
-                    }
-                }
+            }
         }
     }
 
 
     // 내 계정의 데이터 저장
-    // 상대방 계정의 데이터 저장
+// 상대방 계정의 데이터 저장
     fun requestFollow() {
         // 내 계정에 데이터 저장
         var tsDocFollowing = firestore!!.collection("users").document(currentUserUid!!)

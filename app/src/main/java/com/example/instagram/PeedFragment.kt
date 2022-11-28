@@ -123,6 +123,10 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                             "destinationUid",
                             bundleOf("DTOsUid" to contentDTOs[position].uid)
                         )
+                        setFragmentResult(
+                            "userId",
+                            bundleOf("DTOsUserId" to contentDTOs[position].userId)
+                        )
                         findNavController().navigate(R.id.action_peedFragment_to_yourProfileFragment)
                     }
                 }

@@ -1,8 +1,6 @@
 package com.example.instagram
 
-import android.content.Intent
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import com.example.instagram.databinding.FragmentSigninBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -23,7 +21,6 @@ class SigninFragment : BaseFragment<FragmentSigninBinding>(R.layout.fragment_sig
     override fun initDataBinding() {
         super.initDataBinding()
 
-        // 여기다가 binding
         binding.signinButton.setOnClickListener {
             // 유저 정보가 있으면 로그인 후 peed fragment로 변경
             if (binding.textEmail.text.toString() == "" && binding.passwdEditText.text.toString() == "") {
