@@ -102,9 +102,10 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
         init {
             imagesSnapshot = FirebaseFirestore
                 .getInstance().collection("images").whereEqualTo("uid", currentUserUid)
-                ?.addSnapshotListener { querySnapshot, firebaseFiresrore ->
+                .addSnapshotListener { querySnapshot, firebaseFiresrore ->
 
                     if (querySnapshot == null) return@addSnapshotListener
+
                     for (snapshot in querySnapshot.documents) {
                         contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
                     }
@@ -127,12 +128,6 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(R.layout.fragme
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
             var imageView = (holder as CustomViewHolder).imageview
-
-//            binding.accountIvProfile.setOnClickListener {
-//                var photoPickerIntent = Intent(Intent.ACTION_PICK)
-//                photoPickerIntent.type = "image/*"
-//                activity?.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
-//            }
 
             Glide.with(holder.itemView.context)
                 .load(contentDTOs[position].imageUrl)

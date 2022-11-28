@@ -8,13 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.setFragmentResultListener
+import androidx.core.os.bundleOf
+import androidx.fragment.app.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.instagram.databinding.FragmentYourProfileBinding
 import com.example.instagram.model.AlarmDTO
 import com.example.instagram.model.ContentDTO
@@ -45,7 +44,7 @@ class YourProfileFragment :
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
         currentUserUid = auth?.currentUser?.uid
-//        destinationUid =
+
         getFollowerAndFollowing()
 
     }
@@ -59,39 +58,44 @@ class YourProfileFragment :
 
         binding.accountRecyclerview.adapter = UserFragmentRecyclerViewAdapter()
         binding.accountRecyclerview.layoutManager = GridLayoutManager(context, 3)
-//        binding.username.text =
 
     }
 
     fun getFollowerAndFollowing() {
         setFragmentResultListener("userId") { _, bundle ->
             userId = bundle.getString("DTOsUserId")
-            println("^^^^^^^^^^^^^^^^^^^^^^^ $userId")
+            binding.username.text = userId
             setFragmentResultListener("destinationUid") { _, bundle ->
                 // 여기서 binding.textview해서 아이디 바꿔야됨
                 binding.username.text = userId
                 destinationUid = bundle.getString("DTOsUid")
                 uid = destinationUid
+
+                setFragmentResult(
+                    "uid",
+                    bundleOf("uid" to uid)
+                )
+
                 firestore?.collection("users")?.document(uid!!)
                     ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                         if (documentSnapshot == null) return@addSnapshotListener
                         var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
+
                         if (followDTO?.followingCount != null) {
                             binding.accountTvFollowingCount.text =
                                 followDTO.followingCount.toString()
                             // currentUserUid: 현재 접속된 계정
                             // uid: 상대방 계정
-//                            var followers = followDTO.followers[currentUserUid]
-//                            println(followers)
-//                            println(currentUserUid)
-                            if(followDTO.followers[currentUserUid] == true) {
-                                binding.accountBtnFollow.text = "언팔로우하기"
-                            }
-                            else
-                                binding.accountBtnFollow.text = "팔로우하기"
                         }
                         if (followDTO?.followerCount != null) {
                             binding.accountTvFollowCount.text = followDTO.followerCount.toString()
+                        }
+
+                        if (followDTO != null) {
+                            if (followDTO.followers[currentUserUid] == true) {
+                                binding.accountBtnFollow.text = "언팔로우하기"
+                            } else
+                                binding.accountBtnFollow.text = "팔로우하기"
                         }
                     }
             }
@@ -178,20 +182,23 @@ class YourProfileFragment :
 
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
+        var contentDTOs: ArrayList<ContentDTO> = ArrayList()
+
 
         init {
-            firestore?.collection("images")?.whereEqualTo("uid", uid)
-                ?.addSnapshotListener { querySnapshot, firebaseFirestore ->
-
-                    if (querySnapshot == null) return@addSnapshotListener
-
-                    for (snapshot in querySnapshot.documents) {
-                        contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
+            setFragmentResultListener("uid") { _, bundle ->
+                uid = bundle.getString("uid")
+                FirebaseFirestore
+                    .getInstance().collection("images").whereEqualTo("uid", uid)
+                    .addSnapshotListener { querySnapshot, firebaseFirestore ->
+                        if (querySnapshot == null) return@addSnapshotListener
+                        for (snapshot in querySnapshot.documents) {
+                            contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
+                        }
+                        binding.accountTvPostCount.text = contentDTOs.size.toString()
+                        notifyDataSetChanged()
                     }
-                    binding.accountTvPostCount.text = contentDTOs.size.toString()
-                    notifyDataSetChanged()
-                }
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -213,8 +220,7 @@ class YourProfileFragment :
 
             Glide.with(holder.itemView.context)
                 .load(contentDTOs[position].imageUrl)
-                .centerCrop()//이거 고쳐야함!
-//              .apply(new RequestOptions().centerCrop()) 원래 코드
+                .apply(RequestOptions().centerCrop())
                 .into(imageview)
         }
 

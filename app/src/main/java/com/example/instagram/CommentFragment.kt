@@ -23,10 +23,16 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
     var destinationUid: String? = null
     var commentSnapshot: ListenerRegistration? = null
 
+    var firestore: FirebaseFirestore? = null
+
+    var contentUidList: ArrayList<String> = arrayListOf()
+
 
     override fun initStartView() {
         super.initStartView()
         (activity as MainActivity).hideNav()
+        firestore = FirebaseFirestore.getInstance()
+
     }
 
     override fun initDataBinding() {
@@ -45,6 +51,8 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
                 .collection("comments")
                 .document()
                 .set(comment)
+
+
 
             setFragmentResultListener("destinationUid") { _, bundle ->
                 destinationUid = bundle.getString("DTOsUid")
@@ -79,8 +87,8 @@ class CommentFragment : BaseFragment<FragmentCommentBinding>(R.layout.fragment_c
                             if (querySnapshot == null) return@addSnapshotListener
                             for (snapshot in querySnapshot.documents) {
                                 comments.add(snapshot.toObject(ContentDTO.Comment::class.java)!!)
-
                             }
+//                            println("############################댓글 개수: ${querySnapshot.documents.size}")
                             notifyDataSetChanged()
                         }
                 }

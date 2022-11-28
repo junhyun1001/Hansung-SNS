@@ -21,6 +21,7 @@ import com.example.instagram.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import org.w3c.dom.Text
 
@@ -28,6 +29,8 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
     var firestore: FirebaseFirestore? = null
     var uid: String? = null
     var user: FirebaseUser? = null
+
+    var commentSnapshot: ListenerRegistration? = null
 
     var image: ImageView? = null
 
@@ -79,6 +82,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                     }
                     notifyDataSetChanged()
                 }
+            
         }
 
 
@@ -93,6 +97,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
             val viewHolder = (holder as CustomViewHolder).itemView
+
 
             // Profile Image 가져오기
 //            firestore?.collection("profileImages")?.document(contentDTOs[position].uid!!)
@@ -130,6 +135,7 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
                         )
                         findNavController().navigate(R.id.action_peedFragment_to_yourProfileFragment)
                     }
+
                 }
 
             // 이미지 더블클릭시 좋아요 이벤트 처리
@@ -176,9 +182,21 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             viewHolder.findViewById<TextView>(R.id.detailviewitem_favoritecounter_textview).text =
                 "좋아요 ${contentDTOs[position].favoriteCount}개"
 
-            //댓글 카운터 설정
-            viewHolder.findViewById<TextView>(R.id.detailviewitem_comment_textview).text =
-                    "댓글 ${contentDTOs[position].commentCount}개"
+            // 댓글 개수 가져오기
+//            FirebaseFirestore
+//                .getInstance()
+//                .collection("images")
+//                .document(uid!!)
+//                .collection("comments")
+//                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+//                    if (querySnapshot == null) return@addSnapshotListener
+//                    println("############################댓글 개수: ${querySnapshot.documents.size}")
+//                    notifyDataSetChanged()
+//                }
+
+//            viewHolder.findViewById<TextView>(R.id.detailviewitem_comment_textview).text =
+//                "댓글 ${contentDTOs[position].commentCount}개"
+
             // 댓글 눌렀을 때
             viewHolder.findViewById<ImageView>(R.id.detailviewitem_comment_imageview)
                 .setOnClickListener {
@@ -229,8 +247,6 @@ class PeedFragment : BaseFragment<FragmentPeedBinding>(R.layout.fragment_peed) {
             alarmDTO.timestamp = System.currentTimeMillis()
 
             FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
-//            var message = user?.email + getString(R.string.alarm_favorite)
-//            fcmPush?.sendMessage(destinationUid, "알림 메세지 입니다.", message)
         }
 
 

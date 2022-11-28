@@ -41,7 +41,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).showNav()
+
         getFollowing()
+
 
     }
 
@@ -70,8 +73,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 //                }"
 //            )
 //        }
-
-
 
 
         binding.gridfragmentRecyclerview.adapter = GridFragmentRecyclerViewAdapter()
@@ -166,7 +167,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
 
             var imageView = (holder as CustomViewHolder).imageView
 
-            println("#######################################${uid.toString()}") // ydj0siWGuVcoM7TCkiovDXds5go2
+//            println("#######################################${uid.toString()}") // ydj0siWGuVcoM7TCkiovDXds5go2
 
             Glide.with(holder.itemView.context)
                 .load(contentDTOs[position].imageUrl)
@@ -184,8 +185,14 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(R.layout.fragment_sea
                         "destinationUid",
                         bundleOf("DTOsUid" to contentDTOs[position].uid)
                     )
+                    setFragmentResult(
+                        "userId",
+                        bundleOf("DTOsUserId" to contentDTOs[position].userId)
+                    )
                     findNavController().navigate(R.id.action_searchFragment_to_yourProfileFragment)
                 }
+
+
             }
 
 
